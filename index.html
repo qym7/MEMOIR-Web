@@ -80,10 +80,18 @@
                 </span>
 
                 <!-- Github / Code: coming soon -->
-                <span class="link-block">
+                <!-- <span class="link-block">
                   <a class="external-link button is-normal is-rounded is-static" aria-disabled="true">
                     <span class="icon"><i class="fab fa-github"></i></span>
                     <span>Code (coming soon)</span>
+                  </a>
+                </span> -->
+
+                <span class="link-block">
+                  <a href="todo" target="_blank"
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                    <span>Code</span>
                   </a>
                 </span>
 
@@ -135,24 +143,120 @@
       </div>
     </div>
   </section>
-
-  <!-- Main figure placeholder -->
   <section class="hero is-small">
     <div class="hero-body">
-      <div class="container has-text-centered">
-        <h2 class="subtitle">Main figure and method diagram will be added here soon.</h2>
+      <div class="container">
+        <h2 class="title is-3 has-text-centered">MEMOIR: Method Overview</h2>
+        <div class="content has-text-justified">
+
+          <!-- TopHash / Masking mechanism -->
+          <div class="columns is-centered mb-6">
+            <div class="column is-half has-text-centered">
+              <figure class="memoir-img-figure">
+                <img src="static/images/framework.png" alt="Top-k activation-based sparse masking" style="max-width:100%;"/>
+                <figcaption class="has-text-left mt-2" style="font-weight: normal; font-size: 1rem;">
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <p>
+            <strong>MEMOIR</strong> is a lifelong model editing framework where new knowledge is leveraged in a dedicated <em>residual memory</em> module.
+            Below, we provide an intuitive overview of MEMOIR's core principles, each illustrated with an accompanying visualization. Namely, <b>minimal overwriting during training</b> and <b>informed retention during inference</b>.
+          </p>
+
+          <!-- TopHash / Masking mechanism -->
+          <div class="columns is-centered mb-6">
+            <div class="column is-half has-text-centered">
+              <figure class="memoir-img-figure">
+                <img src="static/images/tophash.png" alt="Top-k activation-based sparse masking" style="max-width:100%;"/>
+                <figcaption class="has-text-left mt-2" style="font-weight: normal; font-size: 1rem;">
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <p>
+            First, we use a sparse and sample-dependent masking named <b>TopHash</b> avoids overwriting between different edits, as illustrated in the figure above.
+            Specifically, MEMOIR selects the <i>top-k</i> elements of the input activation vector as a robust "fingerprint." This generates a binary mask selecting which memory columns to update.
+            Semantically similar prompts naturally lead to similar top-k activation patterns.
+            This is followed by a hashing operation, which encourages the model to consider a broader
+            set of features, reducing the risk of overfitting on dominant features and mitigating catastrophic
+            forgetting by distributing updates across the trainable parameters of the memory module.
+          </p>
+
+          <!-- Retention / Overlap -->
+          <div class="columns is-centered mb-6">
+            <div class="column is-half has-text-centered">
+              <figure class="memoir-img-figure">
+                <img src="static/images/retention.png" alt="Informed retention overlap" style="max-width:100%;"/>
+                <figcaption class="has-text-left mt-2" style="font-weight: normal; font-size: 1rem;">
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <p>
+            During inference, informed retention extracts the relevant knowledge conditional to the current prompt.
+            Speficially, MEMOIR first identifies the type of prompt during inference—whether it is an edited prompt, a rephrased version of an edited prompt, or a prompt irrelevant to the edits, based on the distance of the current mask with the saved masks of previous edits (as shown in the figure above).
+            It then activates only the relevant knowledge in the memory.
+          </p>
+
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Results carousel placeholder -->
   <section class="hero is-small">
     <div class="hero-body">
       <div class="container">
-        <h2 class="title is-3 has-text-centered">Results</h2>
-        <h2 class="subtitle has-text-centered mt-4">
-          Benchmark results and qualitative examples will appear here soon.
-        </h2>
+        <h2 class="title is-3 has-text-centered">Results and Analysis</h2>
+        
+        <!-- Figure 1 -->
+        <div class="columns is-centered mb-4">
+          <div class="column is-half has-text-centered">
+            <figure class="memoir-img-figure">
+              <img src="static/images/results_zsre.png" alt="Q&A task results on ZsRE dataset" style="max-width:100%;"/>
+              <figcaption class="has-text-left mt-2" style="font-weight: normal; font-size: 1rem;">
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <p>
+          The table shows theQ&A task results on the ZsRE dataset for a range of edits (T). Higher is better for all metrics.
+          MEMOIR consistently achieves the most balanced and robust performance across reliability, generalization, and locality.
+          Unlike other methods, MEMOIR maintains strong results even as the number of edits increases.
+        </p>
+
+        <!-- Figure 2 (LLaMA-3) -->
+        <div class="columns is-centered mb-2">
+          <div class="column is-half has-text-centered">
+            <figure class="memoir-img-figure">
+              <img src="static/images/num_edits_llama3.png" alt="Performance vs. Edits on ZsRE (LLaMA-3)" style="max-width:100%;"/>
+              <figcaption class="has-text-left mt-2" style="font-weight: normal; font-size: 1rem;">
+                <!-- <b>(a) Performance vs. Number of Edits: LLaMA-3</b> -->
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <!-- Figure 2 (Mistral) -->
+        <div class="columns is-centered mb-4">
+          <div class="column is-half has-text-centered">
+            <figure class="memoir-img-figure">
+              <img src="static/images/num_edits_mistral.png" alt="Performance vs. Edits on ZsRE (Mistral)" style="max-width:100%;"/>
+              <figcaption class="has-text-left mt-2" style="font-weight: normal; font-size: 1rem;">
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <p>
+          The figure further shows the editing performance as the number of edits increases until 3000 on ZsRE: (a) LLaMA-3, (b) Mistral.
+          MEMOIR maintains stable and superior metrics across all edit sizes, outperforming competing approaches throughout.
+        </p>
+
       </div>
     </div>
   </section>
